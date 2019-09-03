@@ -19,7 +19,6 @@ package org.thoughtcrime.securesms.conversation;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import androidx.lifecycle.ViewModelProviders;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -42,16 +41,6 @@ import android.os.Vibrator;
 import android.provider.Browser;
 import android.provider.ContactsContract;
 import android.provider.Telephony;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.content.pm.ShortcutInfoCompat;
-import androidx.core.content.pm.ShortcutManagerCompat;
-import androidx.core.graphics.drawable.IconCompat;
-import androidx.core.view.MenuItemCompat;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.SearchView;
-import androidx.appcompat.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -70,6 +59,18 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.pm.ShortcutInfoCompat;
+import androidx.core.content.pm.ShortcutManagerCompat;
+import androidx.core.graphics.drawable.IconCompat;
+import androidx.core.view.MenuItemCompat;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.annimon.stream.Stream;
 
@@ -217,6 +218,7 @@ import org.thoughtcrime.securesms.util.ViewUtil;
 import org.thoughtcrime.securesms.util.concurrent.AssertedSuccessListener;
 import org.thoughtcrime.securesms.util.concurrent.ListenableFuture;
 import org.thoughtcrime.securesms.util.concurrent.SettableFuture;
+import org.thoughtcrime.securesms.util.concurrent.SignalExecutors;
 import org.thoughtcrime.securesms.util.views.Stub;
 import org.whispersystems.libsignal.InvalidMessageException;
 import org.whispersystems.libsignal.util.guava.Optional;
@@ -442,7 +444,7 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
   protected void onPause() {
     super.onPause();
     MessageNotifier.setVisibleThread(-1L);
-    if (isFinishing()) overridePendingTransition(R.anim.fade_scale_in, R.anim.slide_to_right);
+    if (isFinishing()) overridePendingTransition(R.anim.fade_scale_in, R.anim.slide_to_end);
     inputPanel.onPause();
 
     fragment.setLastSeen(System.currentTimeMillis());
@@ -542,8 +544,8 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
       boolean         initiating     = threadId == -1;
       TransportOption transport      = data.getParcelableExtra(MediaSendActivity.EXTRA_TRANSPORT);
       String          message        = data.getStringExtra(MediaSendActivity.EXTRA_MESSAGE);
-      long            revealDuration = data.getLongExtra(MediaSendActivity.EXTRA_REVEAL_DURATION, 0);
-      QuoteModel      quote          = (revealDuration == 0) ? inputPanel.getQuote().orNull() : null;
+      boolean         viewOnce       = data.getBooleanExtra(MediaSendActivity.EXTRA_VIEW_ONCE, false);
+      QuoteModel      quote          = viewOnce ? null : inputPanel.getQuote().orNull();
       SlideDeck       slideDeck      = new SlideDeck();
 
       if (transport == null) {
@@ -575,7 +577,7 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
                        Collections.emptyList(),
                        Collections.emptyList(),
                        expiresIn,
-                       revealDuration,
+                       viewOnce,
                        subscriptionId,
                        initiating,
                        true).addListener(new AssertedSuccessListener<Void>() {
@@ -1813,7 +1815,7 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
     long       expiresIn      = recipient.getExpireMessages() * 1000L;
     boolean    initiating     = threadId == -1;
 
-    sendMediaMessage(isSmsForced(), "", attachmentManager.buildSlideDeck(), null, contacts, Collections.emptyList(), expiresIn, 0, subscriptionId, initiating, false);
+    sendMediaMessage(isSmsForced(), "", attachmentManager.buildSlideDeck(), null, contacts, Collections.emptyList(), expiresIn, false, subscriptionId, initiating, false);
   }
 
   private void selectContactInfo(ContactData contactData) {
@@ -2135,7 +2137,7 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
       } else if (!forceSms && identityRecords.isUntrusted()) {
         handleUntrustedRecipients();
       } else if (isMediaMessage) {
-        sendMediaMessage(forceSms, expiresIn, 0, subscriptionId, initiating);
+        sendMediaMessage(forceSms, expiresIn, false, subscriptionId, initiating);
       } else {
         sendTextMessage(forceSms, expiresIn, subscriptionId, initiating);
       }
@@ -2151,11 +2153,11 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
     }
   }
 
-  private void sendMediaMessage(final boolean forceSms, final long expiresIn, final long revealDuration, final int subscriptionId, boolean initiating)
+  private void sendMediaMessage(final boolean forceSms, final long expiresIn, final boolean viewOnce, final int subscriptionId, boolean initiating)
       throws InvalidMessageException
   {
     Log.i(TAG, "Sending media message...");
-    sendMediaMessage(forceSms, getMessage(), attachmentManager.buildSlideDeck(), inputPanel.getQuote().orNull(), Collections.emptyList(), linkPreviewViewModel.getActiveLinkPreviews(), expiresIn, revealDuration, subscriptionId, initiating, true);
+    sendMediaMessage(forceSms, getMessage(), attachmentManager.buildSlideDeck(), inputPanel.getQuote().orNull(), Collections.emptyList(), linkPreviewViewModel.getActiveLinkPreviews(), expiresIn, viewOnce, subscriptionId, initiating, true);
   }
 
   private ListenableFuture<Void> sendMediaMessage(final boolean forceSms,
@@ -2165,7 +2167,7 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
                                                   List<Contact> contacts,
                                                   List<LinkPreview> previews,
                                                   final long expiresIn,
-                                                  final long revealDuration,
+                                                  final boolean viewOnce,
                                                   final int subscriptionId,
                                                   final boolean initiating,
                                                   final boolean clearComposeBox)
@@ -2184,7 +2186,7 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
       }
     }
 
-    OutgoingMediaMessage outgoingMessageCandidate = new OutgoingMediaMessage(recipient, slideDeck, body, System.currentTimeMillis(), subscriptionId, expiresIn, revealDuration, distributionType, quote, contacts, previews);
+    OutgoingMediaMessage outgoingMessageCandidate = new OutgoingMediaMessage(recipient, slideDeck, body, System.currentTimeMillis(), subscriptionId, expiresIn, viewOnce, distributionType, quote, contacts, previews);
 
     final SettableFuture<Void> future  = new SettableFuture<>();
     final Context              context = getApplicationContext();
@@ -2385,7 +2387,7 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
         SlideDeck  slideDeck      = new SlideDeck();
         slideDeck.addSlide(audioSlide);
 
-        sendMediaMessage(forceSms, "", slideDeck, inputPanel.getQuote().orNull(), Collections.emptyList(), Collections.emptyList(), expiresIn, 0, subscriptionId, initiating, true).addListener(new AssertedSuccessListener<Void>() {
+        sendMediaMessage(forceSms, "", slideDeck, inputPanel.getQuote().orNull(), Collections.emptyList(), Collections.emptyList(), expiresIn, false, subscriptionId, initiating, true).addListener(new AssertedSuccessListener<Void>() {
           @Override
           public void onSuccess(Void nothing) {
             new AsyncTask<Void, Void, Void>() {
@@ -2491,9 +2493,10 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
   private void sendSticker(@NonNull StickerRecord stickerRecord, boolean clearCompose) {
     sendSticker(new StickerLocator(stickerRecord.getPackId(), stickerRecord.getPackKey(), stickerRecord.getStickerId()), stickerRecord.getUri(), stickerRecord.getSize(), clearCompose);
 
-    AsyncTask.THREAD_POOL_EXECUTOR.execute(() -> {
-      DatabaseFactory.getStickerDatabase(this).updateStickerLastUsedTime(stickerRecord.getRowId(), System.currentTimeMillis());
-    });
+    SignalExecutors.BOUNDED.execute(() ->
+     DatabaseFactory.getStickerDatabase(getApplicationContext())
+                    .updateStickerLastUsedTime(stickerRecord.getRowId(), System.currentTimeMillis())
+    );
   }
 
   private void sendSticker(@NonNull StickerLocator stickerLocator, @NonNull Uri uri, long size, boolean clearCompose) {
@@ -2513,7 +2516,7 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
 
     slideDeck.addSlide(stickerSlide);
 
-    sendMediaMessage(transport.isSms(), "", slideDeck, null, Collections.emptyList(), Collections.emptyList(), expiresIn, 0, subscriptionId, initiating, clearCompose);
+    sendMediaMessage(transport.isSms(), "", slideDeck, null, Collections.emptyList(), Collections.emptyList(), expiresIn, false, subscriptionId, initiating, clearCompose);
 
   }
 
@@ -2696,7 +2699,7 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
     } else {
       SlideDeck slideDeck = messageRecord.isMms() ? ((MmsMessageRecord) messageRecord).getSlideDeck() : new SlideDeck();
 
-      if (messageRecord.isMms() && ((MmsMessageRecord) messageRecord).getRevealDuration() > 0 && slideDeck.getSlides().size() > 0) {
+      if (messageRecord.isMms() && ((MmsMessageRecord) messageRecord).isViewOnce() && slideDeck.getSlides().size() > 0) {
         Attachment attachment = new TombstoneAttachment(slideDeck.getSlides().get(0).getContentType(), true);
         slideDeck = new SlideDeck();
         slideDeck.addSlide(MediaUtil.getSlideForAttachment(this, attachment));

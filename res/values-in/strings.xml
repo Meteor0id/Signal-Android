@@ -11,6 +11,7 @@
   <string name="AbstractNotificationBuilder_new_message">Pesan baru</string>
   <!--AlbumThumbnailView-->
   <string name="AlbumThumbnailView_plus">\+%d</string>
+  <!--ApplicationMigrationActivity-->
   <!--ApplicationPreferencesActivity-->
   <string name="ApplicationPreferencesActivity_currently_s">Sekarang: %s</string>
   <string name="ApplicationPreferenceActivity_you_havent_set_a_passphrase_yet">Anda belum mengatur kata kunci!</string>
@@ -71,7 +72,9 @@
   <string name="CallScreen_Incoming_call">Panggilan masuk</string>
   <!--CameraActivity-->
   <string name="CameraActivity_image_save_failure">Gagal menyimpan gambar.</string>
+  <!--CameraXFragment-->
   <!--CameraContacts-->
+  <string name="CameraContacts__menu_search">Pencarian</string>
   <!--ClearProfileActivity-->
   <string name="ClearProfileActivity_remove">Hapus</string>
   <string name="ClearProfileActivity_remove_profile_photo">Buang foto profil?</string>
@@ -689,6 +692,11 @@ Diterima pesan pertukaran kunci untuk versi protokol yang tidak valid.
   <string name="WebRtcCallScreen_end_call">Akhiri panggilan</string>
   <!--WebRtcCallControls-->
   <string name="WebRtcCallControls_tap_to_enable_your_video">Ketuk untuk mengaktifkan video Anda</string>
+  <!--WebRtcCallControls Content Descriptions-->
+  <string name="WebRtcCallControls_contact_photo_description">Foto kontak</string>
+  <string name="WebRtcCallControls_speaker_button_description">Pengeras Suara</string>
+  <string name="WebRtcCallControls_mute_button_description">Bisu</string>
+  <string name="WebRtcCallControls_answer_call_description">Terima panggilan</string>
   <!--attachment_type_selector-->
   <string name="attachment_type_selector__audio">Audio</string>
   <string name="attachment_type_selector__audio_description">Audio</string>
@@ -711,6 +719,8 @@ Diterima pesan pertukaran kunci untuk versi protokol yang tidak valid.
   <string name="change_passphrase_activity__repeat_new_passphrase">Ulangi frasa sandi baru</string>
   <!--contact_selection_activity-->
   <string name="contact_selection_activity__enter_name_or_number">Masukkan nama atau nomor</string>
+  <string name="contact_selection_activity__invite_to_signal">Undang gabung ke Signal</string>
+  <!--contact_filter_toolbar-->
   <!--contact_selection_group_activity-->
   <string name="contact_selection_group_activity__no_contacts">Tidak ada kontak</string>
   <string name="contact_selection_group_activity__finding_contacts">Memuat kontak...</string>
@@ -749,8 +759,6 @@ Diterima pesan pertukaran kunci untuk versi protokol yang tidak valid.
   <!--conversation_item_received-->
   <string name="conversation_item_received__contact_photo_description">Foto kontak</string>
   <!--audio_view-->
-  <string name="audio_view__play_accessibility_description">Putar</string>
-  <string name="audio_view__pause_accessibility_description">Jeda</string>
   <string name="audio_view__download_accessibility_description">Unduh</string>
   <!--QuoteView-->
   <string name="QuoteView_audio">Audio</string>
@@ -839,8 +847,6 @@ Diterima pesan pertukaran kunci untuk versi protokol yang tidak valid.
   <string name="database_migration_activity__import">Import</string>
   <string name="database_migration_activity__this_could_take_a_moment_please_be_patient">Ini bisa sedikit memakan waktu. Harap bersabar, kami akan memberi tahu anda ketika proses import selesai</string>
   <string name="database_migration_activity__importing">MENGIMPORT</string>
-  <!--database_upgrade_activity-->
-  <string name="database_upgrade_activity__updating_database">Memperbarui basis data...</string>
   <string name="import_fragment__import_system_sms_database">Impor sistem basis data SMS</string>
   <string name="import_fragment__import_the_database_from_the_default_system">Impor basis data dari aplikasi bawaan perpesanan sistem</string>
   <string name="import_fragment__import_plaintext_backup">Impor cadangan plaintext </string>
@@ -888,8 +894,6 @@ Diterima pesan pertukaran kunci untuk versi protokol yang tidak valid.
   <string name="recipient_preferences__ringtone">Nada dering</string>
   <!--- redphone_call_controls-->
   <string name="redphone_call_card__signal_call">Panggilan Signal</string>
-  <string name="redphone_call_controls__mute">Bisukan</string>
-  <string name="redphone_call_controls__flip_camera_rear">Alih Kamera</string>
   <!--registration_activity-->
   <string name="registration_activity__phone_number">NOMOR TELEPON</string>
   <string name="registration_activity__registration_will_transmit_some_contact_information_to_the_server_temporariliy">Signal memudahkan komunikasi dengan menggunakan nomor telepon dan buku alamat yang ada. Teman dan kontak yang sudah tahu cara menghubungi Anda melalui telepon akan dapat dengan mudah menghubungi Signal.\n\nPendaftaran mentransmisikan beberapa informasi kontak ke server. Itu tidak disimpan.</string>
@@ -1103,6 +1107,7 @@ Diterima pesan pertukaran kunci untuk versi protokol yang tidak valid.
   <string name="conversation_list_batch_archive__menu_archive_selected">Arsip terpilih</string>
   <string name="conversation_list_batch_unarchive__menu_unarchive_selected">Buka arsip terpilih</string>
   <!--conversation_list-->
+  <string name="conversation_list_search_description">Pencarian</string>
   <!--conversation_list_item_view-->
   <string name="conversation_list_item_view__contact_photo_image">Gambar Foto Kontak</string>
   <string name="conversation_list_item_view__archived">Diarsipkan</string>

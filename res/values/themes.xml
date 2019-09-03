@@ -26,6 +26,15 @@
     </style>
 
     <style name="TextSecure.DarkNoActionBar" parent="@style/TextSecure.BaseDarkNoActionBar">
+
+    </style>
+
+    <style name="TextSecure.BaseMediaPreview" parent="@style/TextSecure.BaseDarkNoActionBar">
+        <item name="colorPrimaryDark">@color/media_preview_bar_background</item>
+        <item name="android:textColorSecondary">@color/white</item>
+    </style>
+
+    <style name="TextSecure.MediaPreview" parent="@style/TextSecure.BaseMediaPreview">
         <!-- leave empty to allow overriding -->
     </style>
 
@@ -151,6 +160,8 @@
         <item name="conversation_list_item_divider">@drawable/conversation_list_divider_shape</item>
         <item name="conversation_list_toolbar_background">@color/core_blue</item>
         <item name="conversation_list_typing_tint">@color/core_grey_60</item>
+        <item name="conversation_list_camera_icon_tint">@color/core_grey_60</item>
+        <item name="conversation_list_camera_button_background">@color/core_white</item>
 
         <item name="fab_color">@color/textsecure_primary</item>
         <item name="lower_right_divet">@drawable/divet_lower_right_dark</item>
@@ -261,7 +272,7 @@
         <item name="menu_copy_icon">@drawable/ic_content_copy_white_24dp</item>
         <item name="menu_info_icon">@drawable/ic_info_outline_white_24dp</item>
         <item name="menu_forward_icon">@drawable/ic_forward_white_24dp</item>
-        <item name="menu_save_icon">@drawable/ic_save_white_24dp</item>
+        <item name="menu_save_icon">@drawable/ic_download_filled_white_24</item>
         <item name="menu_reply_icon">@drawable/ic_reply_white_24dp</item>
 
         <item name="conversation_icon_attach_audio">@drawable/ic_audio_light</item>
@@ -336,6 +347,8 @@
         <item name="conversation_list_item_divider">@drawable/conversation_list_divider_shape_dark</item>
         <item name="conversation_list_toolbar_background">@color/core_grey_90</item>
         <item name="conversation_list_typing_tint">@color/core_white</item>
+        <item name="conversation_list_camera_icon_tint">@color/core_white</item>
+        <item name="conversation_list_camera_button_background">@color/core_grey_85</item>
 
         <item name="conversation_group_member_name">#99ffffff</item>
 
@@ -445,7 +458,7 @@
         <item name="menu_copy_icon">@drawable/ic_content_copy_white_24dp</item>
         <item name="menu_info_icon">@drawable/ic_info_outline_white_24dp</item>
         <item name="menu_forward_icon">@drawable/ic_forward_white_24dp</item>
-        <item name="menu_save_icon">@drawable/ic_save_white_24dp</item>
+        <item name="menu_save_icon">@drawable/ic_download_filled_white_24</item>
         <item name="menu_reply_icon">@drawable/ic_reply_white_24dp</item>
 
         <item name="conversation_icon_attach_audio">@drawable/ic_audio_dark</item>

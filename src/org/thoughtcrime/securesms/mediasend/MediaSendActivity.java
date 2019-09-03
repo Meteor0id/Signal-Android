@@ -1,10 +1,5 @@
 package org.thoughtcrime.securesms.mediasend;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.view.ContextThemeWrapper;
-import androidx.lifecycle.ViewModelProviders;
-
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -15,12 +10,6 @@ import android.graphics.Rect;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -31,6 +20,16 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.view.ContextThemeWrapper;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity;
 import org.thoughtcrime.securesms.R;
@@ -50,7 +49,7 @@ import org.thoughtcrime.securesms.database.ThreadDatabase;
 import org.thoughtcrime.securesms.imageeditor.model.EditorModel;
 import org.thoughtcrime.securesms.logging.Log;
 import org.thoughtcrime.securesms.mediapreview.MediaRailAdapter;
-import org.thoughtcrime.securesms.mediasend.MediaSendViewModel.RevealState;
+import org.thoughtcrime.securesms.mediasend.MediaSendViewModel.ViewOnceState;
 import org.thoughtcrime.securesms.mms.GifSlide;
 import org.thoughtcrime.securesms.mms.GlideApp;
 import org.thoughtcrime.securesms.mms.ImageSlide;
@@ -101,10 +100,10 @@ public class MediaSendActivity extends PassphraseRequiredActionBarActivity imple
 {
   private static final String TAG = MediaSendActivity.class.getSimpleName();
 
-  public static final String EXTRA_MEDIA           = "media";
-  public static final String EXTRA_MESSAGE         = "message";
-  public static final String EXTRA_TRANSPORT       = "transport";
-  public static final String EXTRA_REVEAL_DURATION = "reveal_duration";
+  public static final String EXTRA_MEDIA     = "media";
+  public static final String EXTRA_MESSAGE   = "message";
+  public static final String EXTRA_TRANSPORT = "transport";
+  public static final String EXTRA_VIEW_ONCE = "view_once";
 
 
   private static final String KEY_ADDRESS   = "address";
@@ -391,7 +390,7 @@ public class MediaSendActivity extends PassphraseRequiredActionBarActivity imple
         Uri uri = BlobProvider.getInstance()
                               .forData(data)
                               .withMimeType(MediaUtil.IMAGE_JPEG)
-                              .createForSingleSessionOnDisk(this, e -> Log.w(TAG, "Failed to write to disk.", e));
+                              .createForSingleSessionOnDisk(this);
         return new Media(uri,
                          MediaUtil.IMAGE_JPEG,
                          System.currentTimeMillis(),
@@ -438,9 +437,12 @@ public class MediaSendActivity extends PassphraseRequiredActionBarActivity imple
   }
 
   @Override
-  public void onRequestFullScreen(boolean fullScreen) {
+  public void onRequestFullScreen(boolean fullScreen, boolean hideKeyboard) {
     if (captionAndRail != null) {
       captionAndRail.setVisibility(fullScreen ? View.GONE : View.VISIBLE);
+    }
+    if (hideKeyboard && hud.isKeyboardOpen()) {
+      hud.hideSoftkey(composeText, null);
     }
   }
 
@@ -527,14 +529,14 @@ public class MediaSendActivity extends PassphraseRequiredActionBarActivity imple
       if (state == null) return;
 
       hud.setVisibility(state.isHudVisible() ? View.VISIBLE : View.GONE);
-      composeContainer.setVisibility(state.isComposeVisible() ? View.VISIBLE : (state.getRevealState() == RevealState.GONE ? View.GONE : View.INVISIBLE));
+      composeContainer.setVisibility(state.isComposeVisible() ? View.VISIBLE : (state.getViewOnceState() == ViewOnceState.GONE ? View.GONE : View.INVISIBLE));
       captionText.setVisibility(state.isCaptionVisible() ? View.VISIBLE : View.GONE);
 
       int captionBackground;
 
       if (state.getRailState() == MediaSendViewModel.RailState.VIEWABLE) {
         captionBackground = R.color.core_grey_90;
-      } else if (state.getRevealState() == RevealState.ENABLED) {
+      } else if (state.getViewOnceState() == ViewOnceState.ENABLED) {
         captionBackground = 0;
       } else {
         captionBackground = R.color.transparent_black_70;
@@ -572,7 +574,7 @@ public class MediaSendActivity extends PassphraseRequiredActionBarActivity imple
           break;
       }
 
-      switch (state.getRevealState()) {
+      switch (state.getViewOnceState()) {
         case ENABLED:
           revealButton.setVisibility(View.VISIBLE);
           revealButton.setImageResource(R.drawable.ic_view_once_32);
@@ -815,7 +817,7 @@ public class MediaSendActivity extends PassphraseRequiredActionBarActivity imple
               Uri uri = BlobProvider.getInstance()
                                     .forData(outputStream.toByteArray())
                                     .withMimeType(MediaUtil.IMAGE_JPEG)
-                                    .createForSingleSessionOnDisk(context, e -> Log.w(TAG, "Failed to write to disk.", e));
+                                    .createForSingleSessionOnDisk(context);
 
               Media updated = new Media(uri, MediaUtil.IMAGE_JPEG, media.getDate(), bitmap.getWidth(), bitmap.getHeight(), outputStream.size(), media.getBucketId(), media.getCaption());
 
@@ -859,9 +861,9 @@ public class MediaSendActivity extends PassphraseRequiredActionBarActivity imple
       Intent intent = new Intent();
 
       intent.putParcelableArrayListExtra(EXTRA_MEDIA, mediaList);
-      intent.putExtra(EXTRA_MESSAGE, viewModel.getRevealDuration() == 0 ? message : "");
+      intent.putExtra(EXTRA_MESSAGE, viewModel.isViewOnce() ? "" : message);
       intent.putExtra(EXTRA_TRANSPORT, transport);
-      intent.putExtra(EXTRA_REVEAL_DURATION, viewModel.getRevealDuration());
+      intent.putExtra(EXTRA_VIEW_ONCE, viewModel.isViewOnce());
 
       setResult(RESULT_OK, intent);
     } else {
@@ -885,7 +887,7 @@ public class MediaSendActivity extends PassphraseRequiredActionBarActivity imple
                                                                   System.currentTimeMillis(),
                                                                   -1,
                                                                   recipient.getExpireMessages() * 1000,
-                                                                  viewModel.getRevealDuration(),
+                                                                  viewModel.isViewOnce(),
                                                                   ThreadDatabase.DistributionTypes.DEFAULT,
                                                                   null,
                                                                   Collections.emptyList(),

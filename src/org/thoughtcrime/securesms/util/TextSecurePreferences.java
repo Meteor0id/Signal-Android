@@ -183,9 +183,11 @@ public class TextSecurePreferences {
 
   private static final String MEDIA_KEYBOARD_MODE = "pref_media_keyboard_mode";
 
-  private static final String REVEALABLE_MESSAGE_DEFAULT = "pref_revealable_message_default";
+  private static final String VIEW_ONCE_DEFAULT = "pref_revealable_message_default";
 
   private static final String SEEN_CAMERA_FIRST_TOOLTIP = "pref_seen_camera_first_tooltip";
+
+  private static final String JOB_MANAGER_VERSION = "pref_job_manager_version";
 
   public static boolean isScreenLockEnabled(@NonNull Context context) {
     return getBooleanPreference(context, SCREEN_LOCK, false);
@@ -783,7 +785,7 @@ public class TextSecurePreferences {
   }
 
   public static int getLastVersionCode(Context context) {
-    return getIntegerPreference(context, LAST_VERSION_CODE_PREF, 0);
+    return getIntegerPreference(context, LAST_VERSION_CODE_PREF, Util.getCanonicalVersionCode());
   }
 
   public static void setLastVersionCode(Context context, int versionCode) throws IOException {
@@ -1103,11 +1105,11 @@ public class TextSecurePreferences {
   }
 
   public static void setIsRevealableMessageEnabled(Context context, boolean value) {
-    setBooleanPreference(context, REVEALABLE_MESSAGE_DEFAULT, value);
+    setBooleanPreference(context, VIEW_ONCE_DEFAULT, value);
   }
 
   public static boolean isRevealableMessageEnabled(Context context) {
-    return getBooleanPreference(context, REVEALABLE_MESSAGE_DEFAULT, false);
+    return getBooleanPreference(context, VIEW_ONCE_DEFAULT, false);
   }
 
   public static void setHasSeenCameraFirstTooltip(Context context, boolean value) {
@@ -1116,6 +1118,14 @@ public class TextSecurePreferences {
 
   public static boolean hasSeendCameraFirstTooltip(Context context) {
     return getBooleanPreference(context, SEEN_CAMERA_FIRST_TOOLTIP, false);
+  }
+
+  public static void setJobManagerVersion(Context context, int version) {
+    setIntegerPrefrence(context, JOB_MANAGER_VERSION, version);
+  }
+
+  public static int getJobManagerVersion(Context contex) {
+    return getIntegerPreference(contex, JOB_MANAGER_VERSION, 1);
   }
 
   public static void setBooleanPreference(Context context, String key, boolean value) {

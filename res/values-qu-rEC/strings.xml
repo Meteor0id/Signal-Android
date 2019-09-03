@@ -9,6 +9,7 @@
   <!--AbstractNotificationBuilder-->
   <string name="AbstractNotificationBuilder_new_message">Mushuk chaski</string>
   <!--AlbumThumbnailView-->
+  <!--ApplicationMigrationActivity-->
   <!--ApplicationPreferencesActivity-->
   <string name="ApplicationPreferencesActivity_currently_s">Kunanpi: %s</string>
   <string name="ApplicationPreferenceActivity_you_havent_set_a_passphrase_yet">¡Manara paskachikta akllashkankichu!</string>
@@ -71,7 +72,9 @@
   <!--CallScreen-->
   <string name="CallScreen_Incoming_call">Kayachiy yaykumukun</string>
   <!--CameraActivity-->
+  <!--CameraXFragment-->
   <!--CameraContacts-->
+  <string name="CameraContacts__menu_search">Maskana </string>
   <!--ClearProfileActivity-->
   <string name="ClearProfileActivity_remove">Anchuchina</string>
   <string name="ClearProfileActivity_remove_profile_photo">Ñawi shuyuta anchuchinayanchu</string>
@@ -652,6 +655,10 @@ Shuk ranti pakallayupay chaski chayamurka, shuk ñawpa mana alli protocolo kashk
   <string name="WebRtcCallScreen_end_call">Kayachita illachina</string>
   <!--WebRtcCallControls-->
   <string name="WebRtcCallControls_tap_to_enable_your_video">Kikinpa shuyu kuyuriyta rikuchinkapak llapipay</string>
+  <!--WebRtcCallControls Content Descriptions-->
+  <string name="WebRtcCallControls_contact_photo_description">Yupay mashipa shuyu</string>
+  <string name="WebRtcCallControls_mute_button_description">Upallayachina</string>
+  <string name="WebRtcCallControls_answer_call_description">Kayachita kutichipay</string>
   <!--attachment_type_selector-->
   <string name="attachment_type_selector__audio">Uyariy</string>
   <string name="attachment_type_selector__audio_description">Uyariy</string>
@@ -674,6 +681,8 @@ Shuk ranti pakallayupay chaski chayamurka, shuk ñawpa mana alli protocolo kashk
   <string name="change_passphrase_activity__repeat_new_passphrase">Mushuk paskachikta kutin killkay</string>
   <!--contact_selection_activity-->
   <string name="contact_selection_activity__enter_name_or_number">Shutita manakashpaka yupayta churapay</string>
+  <string name="contact_selection_activity__invite_to_signal">Signal ukuman kayachiy</string>
+  <!--contact_filter_toolbar-->
   <!--contact_selection_group_activity-->
   <string name="contact_selection_group_activity__no_contacts">Mana yupay mashikuna tiyanchu.</string>
   <string name="contact_selection_group_activity__finding_contacts">Mashi yupaykunata sikachikun...</string>
@@ -712,8 +721,6 @@ Shuk ranti pakallayupay chaski chayamurka, shuk ñawpa mana alli protocolo kashk
   <!--conversation_item_received-->
   <string name="conversation_item_received__contact_photo_description">Yupay mashipa shuyu</string>
   <!--audio_view-->
-  <string name="audio_view__play_accessibility_description">Purichina</string>
-  <string name="audio_view__pause_accessibility_description">Samachina</string>
   <string name="audio_view__download_accessibility_description">Uriyakuchina</string>
   <!--QuoteView-->
   <string name="QuoteView_audio">Uyariy</string>
@@ -809,8 +816,6 @@ Shuk ranti pakallayupay chaski chayamurka, shuk ñawpa mana alli protocolo kashk
   <string name="database_migration_activity__import">Apamuna</string>
   <string name="database_migration_activity__this_could_take_a_moment_please_be_patient">Kayka asha pachata chishiyarinkami. Ama shina kashpa ashakuta shuyapay, ña apamuy paktarikpika wilachishunmi.</string>
   <string name="database_migration_activity__importing">APAMUKUN</string>
-  <!--database_upgrade_activity-->
-  <string name="database_upgrade_activity__updating_database">Willaywakaychita kunanyachikun.</string>
   <string name="import_fragment__import_system_sms_database">Llikamanta SMS willaywakaychikta apamuna.</string>
   <string name="import_fragment__import_the_database_from_the_default_system">Llikapa,  kallariy chaskiy aplicacion ukumanta  willaywakaychikta apamuna.</string>
   <string name="import_fragment__import_plaintext_backup">Rikcha wakaychishkata hawalla killkapi apamuna.</string>
@@ -859,8 +864,6 @@ Shuk ranti pakallayupay chaski chayamurka, shuk ñawpa mana alli protocolo kashk
   <string name="recipient_preferences__ringtone">Williwillipa wakay</string>
   <!--- redphone_call_controls-->
   <string name="redphone_call_card__signal_call">Signalwan kayachipay</string>
-  <string name="redphone_call_controls__mute">Upallayachina</string>
-  <string name="redphone_call_controls__flip_camera_rear">Shuk shuyullukchikman yallichik</string>
   <!--registration_activity-->
   <string name="registration_activity__phone_number">WILLIWILLIPA YUPAY</string>
   <string name="registration_activity__registration_will_transmit_some_contact_information_to_the_server_temporariliy">Signal yanapanmi rimarinkapak kikinpa yupaywan shinallata kikinpa mashiyupaykunwanpash. Kikinpa mashikuna ña  yachashpaka Signalwan rimarita ushankichimi.\n\nKallari killkari willayta riksichin kikinpa yupaymashipata shinapash mana servidor ukupi allichinchu.</string>
@@ -1068,6 +1071,7 @@ Shuk ranti pakallayupay chaski chayamurka, shuk ñawpa mana alli protocolo kashk
   <string name="conversation_list_batch_archive__menu_archive_selected">Akllashka</string>
   <string name="conversation_list_batch_unarchive__menu_unarchive_selected">Mana akllashka</string>
   <!--conversation_list-->
+  <string name="conversation_list_search_description">Maskana </string>
   <!--conversation_list_item_view-->
   <string name="conversation_list_item_view__contact_photo_image">Yupay mashipa shuyu</string>
   <string name="conversation_list_item_view__archived">Allichishka</string>
